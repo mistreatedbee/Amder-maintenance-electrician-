@@ -12,7 +12,7 @@ export const Route = createFileRoute("/")({
       { title: `${SITE.name} | Johannesburg's Premium Contractors` },
       { name: "description", content: SITE.description },
     ],
-    links: [{ rel: "preload", as: "image", href: heroImg, fetchpriority: "high" } as never],
+    links: [{ rel: "preload", as: "image", href: heroImg, fetchPriority: "high" } as never],
   }),
   component: Home,
 });
