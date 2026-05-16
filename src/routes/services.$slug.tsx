@@ -46,7 +46,7 @@ function ServiceDetail() {
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">{s.description}</p>
 
             <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-              {s.features.map((f) => (
+              {s.features.map((f: string) => (
                 <li key={f} className="flex items-start gap-3 rounded-xl border border-border/60 bg-surface/40 px-4 py-3 text-sm">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-amber" />
                   {f}
