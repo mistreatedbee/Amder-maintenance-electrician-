@@ -18,16 +18,16 @@ import { SITE } from "@/lib/site";
 
 function NotFoundComponent() {
   return (
-    <div className="grid min-h-screen place-items-center px-4">
+    <div className="grid min-h-screen place-items-center px-4 bg-[#F7F3EC]">
       <div className="max-w-md text-center">
-        <p className="font-display text-[7rem] leading-none text-amber-gradient">404</p>
-        <h1 className="mt-2 font-display text-2xl">Page not found</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="font-serif text-[7rem] leading-none text-[#C09A52] font-light italic">404</p>
+        <h1 className="mt-2 font-serif text-2xl text-[#1A1916]">Page not found</h1>
+        <p className="mt-3 text-sm text-[#7A7068] font-light">
           The page you're looking for doesn't exist or has moved.
         </p>
         <Link
           to="/"
-          className="mt-6 inline-flex rounded-full bg-amber-gradient px-5 py-2.5 text-sm font-semibold text-background"
+          className="mt-8 inline-flex border border-[#1A1916] px-8 py-3 text-xs uppercase tracking-[0.2em] text-[#1A1916] hover:bg-[#1A1916] hover:text-white transition-colors duration-300"
         >
           Back to home
         </Link>
@@ -40,13 +40,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   const router = useRouter();
   console.error(error);
   return (
-    <div className="grid min-h-screen place-items-center px-4">
+    <div className="grid min-h-screen place-items-center px-4 bg-[#F7F3EC]">
       <div className="max-w-md text-center">
-        <h1 className="font-display text-2xl">Something went wrong</h1>
-        <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
+        <h1 className="font-serif text-2xl text-[#1A1916]">Something went wrong</h1>
+        <p className="mt-2 text-sm text-[#7A7068] font-light">{error.message}</p>
         <button
           onClick={() => { router.invalidate(); reset(); }}
-          className="mt-6 inline-flex rounded-full bg-amber-gradient px-5 py-2.5 text-sm font-semibold text-background"
+          className="mt-8 inline-flex border border-[#1A1916] px-8 py-3 text-xs uppercase tracking-[0.2em] text-[#1A1916] hover:bg-[#1A1916] hover:text-white transition-colors duration-300"
         >
           Try again
         </button>
@@ -63,7 +63,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: `${SITE.name} | Johannesburg's Premium Contractors` },
       { name: "description", content: SITE.description },
       { name: "author", content: SITE.name },
-      { name: "theme-color", content: "#0a0a0a" },
+      { name: "theme-color", content: "#F7F3EC" },
       { property: "og:title", content: SITE.name },
       { property: "og:description", content: SITE.description },
       { property: "og:type", content: "website" },
@@ -75,11 +75,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
-      },
-      {
-        rel: "stylesheet",
-        href: "https://api.fontshare.com/v2/css?f[]=clash-display@600,700,500,400&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap",
       },
     ],
   }),
@@ -91,11 +87,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
         <HeadContent />
       </head>
-      <body className="min-h-screen bg-background text-foreground antialiased">
+      <body className="min-h-screen bg-[#F7F3EC] text-[#1A1916] antialiased">
         {children}
         <Scripts />
       </body>
@@ -109,12 +105,12 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <LoadingScreen />
       <Nav />
-      <main className="relative pt-24">
+      <main className="relative">
         <Outlet />
       </main>
       <Footer />
       <WhatsAppFab />
-      <Toaster theme="dark" position="top-right" richColors closeButton />
+      <Toaster theme="light" position="top-right" richColors closeButton />
     </QueryClientProvider>
   );
 }

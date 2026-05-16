@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SERVICES, SITE } from "@/lib/site";
-import { SectionLabel } from "@/components/site/Motion";
-import { Check } from "lucide-react";
+import { Reveal, RevealClip, RevealLine, SectionLabel } from "@/components/site/Motion";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -19,6 +18,7 @@ const TIERS = [
     price: "R 450",
     blurb: "On-site diagnosis & minor fix.",
     features: ["Within 30km of CBD", "Up to 1 hour on-site", "Written report", "Quote for further work"],
+    featured: false,
   },
   {
     name: "Project",
@@ -32,57 +32,115 @@ const TIERS = [
     price: "By quotation",
     blurb: "Renovations & multi-trade builds.",
     features: ["Dedicated project manager", "3D plans on request", "Weekly progress updates", "Snag list & handover"],
+    featured: false,
   },
 ];
 
 function PricingPage() {
   return (
-    <>
-      <header className="mx-auto max-w-7xl px-4 pt-12 pb-12 md:pt-20">
-        <SectionLabel>Pricing</SectionLabel>
-        <h1 className="mt-5 max-w-3xl font-display text-5xl font-bold leading-[1.05] md:text-7xl">
-          Fair pricing. <span className="text-amber-gradient">Zero surprises.</span>
-        </h1>
-        <p className="mt-6 max-w-2xl text-muted-foreground">
-          Every project starts with a free written quote. These starting points give you an idea of where we land.
-        </p>
-      </header>
-
-      <section className="mx-auto max-w-7xl px-4 pb-16">
-        <div className="grid gap-5 md:grid-cols-3">
-          {TIERS.map((t) => (
-            <div key={t.name} className={`relative flex flex-col rounded-3xl border bg-card/60 p-8 ${t.featured ? "border-amber/40 shadow-glow" : "border-border/60"}`}>
-              {t.featured && <span className="absolute -top-3 left-8 rounded-full bg-amber-gradient px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-background">Most booked</span>}
-              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t.name}</div>
-              <div className="mt-3 font-display text-5xl font-bold text-amber-gradient">{t.price}</div>
-              <p className="mt-2 text-sm text-muted-foreground">{t.blurb}</p>
-              <ul className="mt-6 grid gap-2.5 text-sm">
-                {t.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-amber" /> {f}</li>
-                ))}
-              </ul>
-              <Link to="/booking" className={`mt-8 inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition-colors ${t.featured ? "bg-amber-gradient text-background" : "border border-border/80 hover:border-amber/50 hover:text-amber"}`}>
-                Request quote
-              </Link>
-            </div>
-          ))}
+    <div className="min-h-screen bg-[#F7F3EC]">
+      {/* Header */}
+      <div className="pt-40 pb-16 px-6 md:px-12 border-b border-[#E4DDD0]">
+        <div className="mx-auto max-w-7xl">
+          <SectionLabel>Pricing</SectionLabel>
+          <RevealClip className="mt-6">
+            <h1
+              className="font-serif font-light text-[#1A1916] leading-[0.95]"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: "clamp(3rem, 8vw, 7rem)",
+              }}
+            >
+              Fair pricing.
+            </h1>
+          </RevealClip>
+          <Reveal delay={0.2}>
+            <p className="mt-6 max-w-lg text-sm font-light leading-relaxed text-[#7A7068]">
+              Every project starts with a free written quote. These starting points give you an
+              idea of where we land.
+            </p>
+          </Reveal>
         </div>
-      </section>
+      </div>
 
-      <section className="mx-auto max-w-7xl px-4 pb-24">
-        <h2 className="font-display text-3xl font-bold md:text-4xl">Service starting points</h2>
-        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {SERVICES.map((s) => (
-            <div key={s.slug} className="flex items-center justify-between rounded-2xl border border-border/60 bg-card/60 p-5">
-              <div>
-                <div className="font-semibold">{s.name}</div>
-                <div className="text-xs text-muted-foreground">{s.short}</div>
+      {/* Tiers */}
+      <div className="mx-auto max-w-7xl px-6 md:px-12 py-20 md:py-28">
+        <RevealLine />
+        <div className="mt-0 grid gap-0 md:grid-cols-3 md:divide-x md:divide-[#E4DDD0]">
+          {TIERS.map((t, i) => (
+            <Reveal key={t.name} delay={i * 0.1}>
+              <div className={`px-0 py-12 md:px-10 ${t.featured ? "relative" : ""}`}>
+                {t.featured && (
+                  <span className="inline-block mb-4 text-[0.55rem] uppercase tracking-[0.25em] text-[#C09A52] border border-[#C09A52] px-3 py-1">
+                    Most booked
+                  </span>
+                )}
+                <p className="text-[0.6rem] uppercase tracking-[0.22em] text-[#7A7068]">{t.name}</p>
+                <p
+                  className="mt-3 font-serif font-light text-[#1A1916]"
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: "clamp(2rem, 4vw, 3rem)",
+                  }}
+                >
+                  {t.price}
+                </p>
+                <p className="mt-2 text-sm font-light text-[#7A7068]">{t.blurb}</p>
+                <div className="my-7 h-px bg-[#E4DDD0]" />
+                <ul className="space-y-3 text-sm">
+                  {t.features.map((f) => (
+                    <li key={f} className="flex items-start gap-3">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C09A52]" />
+                      <span className="font-light text-[#1A1916]">{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  to="/booking"
+                  className={`mt-8 inline-flex border px-6 py-2.5 text-[0.65rem] uppercase tracking-[0.2em] transition-all duration-300 ${
+                    t.featured
+                      ? "border-[#C09A52] text-[#C09A52] hover:bg-[#C09A52] hover:text-white"
+                      : "border-[#1A1916]/30 text-[#1A1916]/60 hover:border-[#1A1916] hover:text-[#1A1916]"
+                  }`}
+                >
+                  Request quote →
+                </Link>
               </div>
-              <div className="font-display text-lg text-amber-gradient">{s.startingFrom}</div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+
+      {/* Service starting points */}
+      <div className="bg-[#F0EAE0] py-20 px-6 md:px-12">
+        <div className="mx-auto max-w-7xl">
+          <SectionLabel>Per service</SectionLabel>
+          <h2
+            className="mt-5 font-serif font-light text-[#1A1916] mb-12"
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "clamp(1.8rem, 3.5vw, 3rem)",
+            }}
+          >
+            Service starting points
+          </h2>
+          <RevealLine />
+          {SERVICES.map((s) => (
+            <div key={s.slug} className="flex items-center justify-between gap-8 py-5 border-b border-[#E4DDD0]">
+              <div>
+                <p className="text-sm font-light text-[#1A1916]">{s.name}</p>
+                <p className="text-[0.6rem] uppercase tracking-[0.15em] text-[#7A7068] mt-0.5">{s.short}</p>
+              </div>
+              <p
+                className="font-serif font-light text-[#C09A52] shrink-0"
+                style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.25rem" }}
+              >
+                {s.startingFrom}
+              </p>
             </div>
           ))}
         </div>
-      </section>
-    </>
+      </div>
+    </div>
   );
 }

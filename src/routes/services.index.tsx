@@ -1,68 +1,217 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { SERVICES, SITE } from "@/lib/site";
-import { Reveal, SectionLabel } from "@/components/site/Motion";
-import { ArrowUpRight, Check } from "lucide-react";
+import { Reveal, RevealClip, RevealLine, SectionLabel } from "@/components/site/Motion";
 
 export const Route = createFileRoute("/services/")({
   head: () => ({
     meta: [
       { title: `Services | ${SITE.name}` },
-      { name: "description", content: "Electrical, plumbing, renovations, ceilings, tiling, welding, drywall, carports and maintenance across Johannesburg." },
+      { name: "description", content: "Premium electrical, plumbing, renovations, ceilings, welding and property maintenance in Johannesburg." },
     ],
   }),
   component: ServicesPage,
 });
 
 function ServicesPage() {
-  return (
-    <>
-      <header className="mx-auto max-w-7xl px-4 pt-12 pb-12 md:pt-20">
-        <SectionLabel>Our services</SectionLabel>
-        <h1 className="mt-5 max-w-3xl font-display text-5xl font-bold leading-[1.05] md:text-7xl">
-          Ten trades. <span className="text-amber-gradient">One trusted team.</span>
-        </h1>
-        <p className="mt-6 max-w-2xl text-muted-foreground">
-          From a single light fitting to a full home renovation — we handle every stage in-house and accountable to a single project manager.
-        </p>
-      </header>
+  const [hovered, setHovered] = useState<string | null>(null);
 
-      <section className="mx-auto max-w-7xl px-4 pb-24">
-        <div className="grid gap-4 md:grid-cols-2">
+  return (
+    <div className="min-h-screen bg-[#F7F3EC]">
+      {/* Page header */}
+      <div className="pt-40 pb-16 px-6 md:px-12 border-b border-[#E4DDD0]">
+        <div className="mx-auto max-w-7xl">
+          <SectionLabel>What we offer</SectionLabel>
+          <RevealClip className="mt-6">
+            <h1
+              className="font-serif font-light text-[#1A1916] leading-[0.95]"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: "clamp(3.5rem, 9vw, 8rem)",
+              }}
+            >
+              Our Services
+            </h1>
+          </RevealClip>
+          <Reveal delay={0.3}>
+            <p className="mt-6 max-w-lg text-sm font-light leading-relaxed text-[#7A7068]">
+              Ten specialist trades under one roof. From emergency callouts to
+              full luxury renovations — one contractor, one invoice, zero hassle.
+            </p>
+          </Reveal>
+        </div>
+      </div>
+
+      {/* Editorial numbered list */}
+      <div className="mx-auto max-w-7xl px-6 md:px-12 py-16 md:py-24">
+        {/* Desktop: split layout with image preview */}
+        <div className="hidden md:grid md:grid-cols-[1fr_420px] md:gap-16 md:items-start">
+          {/* Left: numbered list */}
+          <div>
+            {SERVICES.map((s, i) => (
+              <div key={s.slug}>
+                <Reveal delay={i * 0.05}>
+                  <Link
+                    to="/services/$slug"
+                    params={{ slug: s.slug }}
+                    className="group flex items-start gap-8 py-8 transition-colors"
+                    onMouseEnter={() => setHovered(s.slug)}
+                    onMouseLeave={() => setHovered(null)}
+                  >
+                    {/* Number */}
+                    <span
+                      className={`font-serif text-[0.7rem] font-light pt-1 shrink-0 transition-colors duration-300 ${
+                        hovered === s.slug ? "text-[#C09A52]" : "text-[#C4B49E]"
+                      }`}
+                      style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+
+                    {/* Service info */}
+                    <div className="flex-1 grid grid-cols-[1fr_auto] gap-8 items-start">
+                      <div>
+                        <h2
+                          className={`font-serif font-light leading-tight transition-colors duration-300 ${
+                            hovered === s.slug ? "text-[#C09A52]" : "text-[#1A1916]"
+                          }`}
+                          style={{
+                            fontFamily: "'Cormorant Garamond', serif",
+                            fontSize: "clamp(1.6rem, 2.5vw, 2.2rem)",
+                          }}
+                        >
+                          {s.name}
+                        </h2>
+                        <p className="mt-2 text-sm font-light text-[#7A7068] max-w-md">
+                          {s.short}
+                        </p>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className="text-[0.6rem] uppercase tracking-[0.22em] text-[#C09A52]">
+                          From {s.startingFrom}
+                        </p>
+                        <p
+                          className={`mt-2 text-[0.65rem] uppercase tracking-[0.2em] transition-colors duration-300 ${
+                            hovered === s.slug ? "text-[#C09A52]" : "text-[#C4B49E]"
+                          }`}
+                        >
+                          Explore →
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                </Reveal>
+                <RevealLine delay={i * 0.03} />
+              </div>
+            ))}
+          </div>
+
+          {/* Right: sticky image preview */}
+          <div className="sticky top-32">
+            <AnimatePresence mode="wait">
+              {hovered ? (
+                <motion.div
+                  key={hovered}
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.96 }}
+                  transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
+                  className="aspect-[3/4] overflow-hidden"
+                >
+                  <img
+                    src={SERVICES.find((s) => s.slug === hovered)?.image}
+                    alt={hovered}
+                    className="h-full w-full object-cover"
+                  />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="placeholder"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="aspect-[3/4] bg-[#E4DDD0] flex items-end p-8"
+                >
+                  <p
+                    className="font-serif text-2xl font-light italic text-[#C4B49E]"
+                    style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                  >
+                    Hover a service to preview
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Mobile: list layout */}
+        <div className="md:hidden space-y-0">
           {SERVICES.map((s, i) => (
-            <Reveal key={s.slug} delay={(i % 2) * 0.08}>
-              <Link
-                to="/services/$slug"
-                params={{ slug: s.slug }}
-                className="group relative block overflow-hidden rounded-3xl border border-border/60 bg-card transition-all duration-500 hover:border-amber/40 hover:shadow-glow"
-              >
-                <div className="grid items-stretch sm:grid-cols-[1fr_1.1fr]">
-                  <div className="relative aspect-[4/3] overflow-hidden sm:aspect-auto">
-                    <img src={s.image} alt={s.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1400ms] group-hover:scale-110" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-card/40 via-transparent to-transparent" />
-                  </div>
-                  <div className="flex flex-col justify-between gap-6 p-7 md:p-10">
-                    <div>
-                      <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-amber">From {s.startingFrom}</div>
-                      <h2 className="mt-2 font-display text-3xl font-semibold md:text-4xl">{s.name}</h2>
-                      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.description}</p>
-                      <ul className="mt-5 grid gap-2 sm:grid-cols-2">
-                        {s.features.map((f) => (
-                          <li key={f} className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <Check className="h-3.5 w-3.5 text-amber" /> {f}
-                          </li>
-                        ))}
-                      </ul>
+            <div key={s.slug}>
+              <Reveal delay={i * 0.04}>
+                <Link
+                  to="/services/$slug"
+                  params={{ slug: s.slug }}
+                  className="group flex gap-5 py-6"
+                >
+                  <span
+                    className="font-serif text-[0.65rem] font-light text-[#C4B49E] pt-1 shrink-0"
+                    style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between gap-3">
+                      <h2
+                        className="font-serif font-light text-[#1A1916] text-xl leading-tight"
+                        style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                      >
+                        {s.name}
+                      </h2>
+                      <span className="text-[0.6rem] uppercase tracking-[0.2em] text-[#C09A52] shrink-0 pt-1">
+                        {s.startingFrom}
+                      </span>
                     </div>
-                    <div className="inline-flex items-center gap-2 text-sm font-semibold text-amber">
-                      Explore service <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </div>
+                    <p className="mt-1.5 text-sm font-light text-[#7A7068]">{s.short}</p>
                   </div>
-                </div>
-              </Link>
-            </Reveal>
+                </Link>
+              </Reveal>
+              <div className="h-px bg-[#E4DDD0]" />
+            </div>
           ))}
         </div>
-      </section>
-    </>
+      </div>
+
+      {/* CTA strip */}
+      <div className="bg-[#1A1916] px-6 py-16 md:px-12">
+        <div className="mx-auto max-w-7xl flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <p
+            className="font-serif font-light italic text-white/80"
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "clamp(1.6rem, 3vw, 2.5rem)",
+            }}
+          >
+            Need something specific?
+          </p>
+          <div className="flex gap-4">
+            <Link
+              to="/booking"
+              className="inline-flex border border-[#C09A52] px-7 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-[#C09A52] hover:bg-[#C09A52] hover:text-white transition-all duration-300"
+            >
+              Get a Quote
+            </Link>
+            <Link
+              to="/contact"
+              className="inline-flex border border-white/20 px-7 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-white/60 hover:border-white/40 hover:text-white transition-all duration-300"
+            >
+              Contact Us
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

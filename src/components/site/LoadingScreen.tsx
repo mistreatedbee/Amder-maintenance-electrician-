@@ -8,14 +8,14 @@ export function LoadingScreen() {
   useEffect(() => {
     let p = 0;
     const id = setInterval(() => {
-      p += Math.random() * 18 + 6;
+      p += Math.random() * 14 + 5;
       if (p >= 100) {
         p = 100;
         clearInterval(id);
-        setTimeout(() => setShow(false), 320);
+        setTimeout(() => setShow(false), 600);
       }
       setPct(Math.min(100, Math.round(p)));
-    }, 110);
+    }, 150);
     return () => clearInterval(id);
   }, []);
 
@@ -25,40 +25,33 @@ export function LoadingScreen() {
         <motion.div
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.4, ease: "easeInOut" }}
-          className="fixed inset-0 z-[100] grid place-items-center bg-background"
+          transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
+          className="fixed inset-0 z-100 flex flex-col items-center justify-center bg-[#F7F3EC]"
         >
-          <div className="relative grain w-[min(90vw,420px)]">
-            <div className="pointer-events-none absolute -inset-24 bg-radial-glow opacity-70" />
-            <div className="relative flex flex-col items-center gap-8">
-              <motion.div
-                initial={{ scale: 0.85, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="flex flex-col items-center"
-              >
-                <div className="font-display text-5xl font-bold tracking-tight text-amber-gradient">
-                  AMBER
-                </div>
-                <div className="mt-1 text-[10px] font-medium uppercase tracking-[0.3em] text-muted-foreground">
-                  Maintenance & Electrical
-                </div>
-              </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.76, 0, 0.24, 1] }}
+            className="flex flex-col items-center"
+          >
+            <span
+              className="font-serif text-5xl font-light italic text-[#1A1916] tracking-wide"
+              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            >
+              Amber
+            </span>
+            <span className="mt-2 text-[0.6rem] font-medium uppercase tracking-[0.35em] text-[#7A7068]">
+              Maintenance &amp; Electrical
+            </span>
+          </motion.div>
 
-              <div className="w-full">
-                <div className="relative h-[3px] w-full overflow-hidden rounded-full bg-secondary">
-                  <motion.div
-                    className="absolute inset-y-0 left-0 bg-amber-gradient"
-                    style={{ width: `${pct}%` }}
-                    transition={{ duration: 0.2 }}
-                  />
-                </div>
-                <div className="mt-2 flex items-center justify-between text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                  <span>Loading</span>
-                  <span className="tabular-nums text-amber">{pct}%</span>
-                </div>
-              </div>
-            </div>
+          {/* Full-width thin progress bar at very bottom */}
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-[#E4DDD0]">
+            <motion.div
+              className="h-full bg-[#C09A52] origin-left"
+              style={{ scaleX: pct / 100 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            />
           </div>
         </motion.div>
       )}

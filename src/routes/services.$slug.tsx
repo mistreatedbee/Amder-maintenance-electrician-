@@ -1,7 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SERVICES, SITE, waLink } from "@/lib/site";
-import { SectionLabel } from "@/components/site/Motion";
-import { ArrowRight, Check, Phone } from "lucide-react";
+import { Reveal, RevealClip, RevealLine, SectionLabel } from "@/components/site/Motion";
 
 export const Route = createFileRoute("/services/$slug")({
   loader: ({ params }) => {
@@ -22,12 +21,26 @@ export const Route = createFileRoute("/services/$slug")({
   }),
   component: ServiceDetail,
   notFoundComponent: () => (
-    <div className="mx-auto max-w-3xl px-4 py-24 text-center">
-      <h1 className="font-display text-4xl">Service not found</h1>
-      <Link to="/services" className="mt-6 inline-flex rounded-full bg-amber-gradient px-5 py-2.5 text-sm font-semibold text-background">View all services</Link>
+    <div className="min-h-screen bg-[#F7F3EC] grid place-items-center px-6">
+      <div className="text-center">
+        <p className="font-serif text-6xl font-light italic text-[#C09A52]"
+          style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          Not found
+        </p>
+        <Link
+          to="/services"
+          className="mt-8 inline-flex border border-[#1A1916] px-8 py-3 text-xs uppercase tracking-[0.2em] text-[#1A1916] hover:bg-[#1A1916] hover:text-white transition-colors duration-300"
+        >
+          View all services
+        </Link>
+      </div>
     </div>
   ),
-  errorComponent: ({ error }) => <div className="mx-auto max-w-3xl px-4 py-24 text-center text-muted-foreground">{error.message}</div>,
+  errorComponent: ({ error }) => (
+    <div className="min-h-screen bg-[#F7F3EC] grid place-items-center px-6">
+      <p className="text-sm text-[#7A7068]">{error.message}</p>
+    </div>
+  ),
 });
 
 function ServiceDetail() {
@@ -35,63 +48,160 @@ function ServiceDetail() {
   const others = SERVICES.filter((x) => x.slug !== s.slug).slice(0, 4);
 
   return (
-    <>
-      <section className="relative mx-auto max-w-7xl px-4 pt-8 md:pt-12">
-        <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
-          <div className="order-2 lg:order-1">
-            <SectionLabel>{s.startingFrom !== "Quote" ? `From ${s.startingFrom}` : "By quotation"}</SectionLabel>
-            <h1 className="mt-5 font-display text-5xl font-bold leading-[1.05] md:text-7xl">
+    <div className="min-h-screen bg-[#F7F3EC]">
+      {/* Hero */}
+      <div className="pt-32 md:pt-40">
+        <div className="mx-auto max-w-7xl px-6 md:px-12">
+          <SectionLabel>
+            {s.startingFrom !== "Quote" ? `From ${s.startingFrom}` : "By quotation"}
+          </SectionLabel>
+          <RevealClip className="mt-5">
+            <h1
+              className="font-serif font-light text-[#1A1916] leading-[0.92]"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: "clamp(3rem, 8vw, 7rem)",
+              }}
+            >
               {s.name}
             </h1>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">{s.description}</p>
+          </RevealClip>
+        </div>
 
-            <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-              {s.features.map((f: string) => (
-                <li key={f} className="flex items-start gap-3 rounded-xl border border-border/60 bg-surface/40 px-4 py-3 text-sm">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-amber" />
-                  {f}
-                </li>
-              ))}
-            </ul>
+        {/* Full-width image */}
+        <div className="mt-12 mx-6 md:mx-12 overflow-hidden">
+          <Reveal>
+            <div className="aspect-[16/7] overflow-hidden">
+              <img
+                src={s.image}
+                alt={s.name}
+                className="h-full w-full object-cover transition-transform duration-1400 hover:scale-[1.03]"
+              />
+            </div>
+          </Reveal>
+        </div>
+      </div>
 
-            <div className="mt-10 flex flex-wrap gap-3">
-              <Link to="/booking" className="inline-flex items-center gap-2 rounded-full bg-amber-gradient px-6 py-3.5 text-sm font-semibold text-background shadow-glow-lg transition-transform hover:scale-[1.03]">
-                Book this service <ArrowRight className="h-4 w-4" />
+      {/* Main content */}
+      <div className="mx-auto max-w-7xl px-6 md:px-12 py-20 md:py-28">
+        <RevealLine />
+        <div className="mt-16 grid gap-16 md:grid-cols-[1.2fr_1fr] md:gap-24 md:items-start">
+          {/* Description */}
+          <Reveal>
+            <h2
+              className="font-serif font-light text-[#1A1916] leading-tight"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: "clamp(1.6rem, 3vw, 2.5rem)",
+              }}
+            >
+              {s.short}
+            </h2>
+            <p className="mt-6 text-sm font-light leading-relaxed text-[#7A7068]">
+              {s.description}
+            </p>
+
+            {/* CTA buttons */}
+            <div className="mt-10 flex flex-wrap items-center gap-4">
+              <Link
+                to="/booking"
+                className="inline-flex border border-[#C09A52] px-7 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-[#C09A52] hover:bg-[#C09A52] hover:text-white transition-all duration-300"
+              >
+                Book this service
               </Link>
-              <a href={waLink(`Hi Amber, I'd like a quote for ${s.name}.`)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-surface/40 px-6 py-3.5 text-sm font-semibold transition-colors hover:border-amber/50 hover:text-amber">
+              <a
+                href={waLink(`Hi Amber, I'd like a quote for ${s.name}.`)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex border border-[#1A1916]/30 px-7 py-3 text-[0.65rem] uppercase tracking-[0.2em] text-[#1A1916]/70 hover:border-[#1A1916] hover:text-[#1A1916] transition-all duration-300"
+              >
                 WhatsApp Quote
               </a>
-              <a href={`tel:${SITE.phones[0].replace(/\s/g, "")}`} className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-surface/40 px-6 py-3.5 text-sm font-semibold transition-colors hover:border-amber/50 hover:text-amber">
-                <Phone className="h-4 w-4" /> Call
+            </div>
+          </Reveal>
+
+          {/* Features list */}
+          <Reveal delay={0.15}>
+            <p className="text-[0.6rem] uppercase tracking-[0.25em] text-[#7A7068] mb-6">
+              What's included
+            </p>
+            <div className="space-y-0">
+              {s.features.map((f: string, i: number) => (
+                <div key={f}>
+                  <div className="flex items-center gap-5 py-4">
+                    <span
+                      className="font-serif text-[0.65rem] text-[#C4B49E] shrink-0"
+                      style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="text-sm font-light text-[#1A1916]">{f}</span>
+                  </div>
+                  <div className="h-px bg-[#E4DDD0]" />
+                </div>
+              ))}
+            </div>
+
+            {/* Phone CTA */}
+            <div className="mt-8 flex items-center gap-4">
+              <span className="inline-block h-px w-8 bg-[#C09A52]" />
+              <a
+                href={`tel:${SITE.phones[0].replace(/\s/g, "")}`}
+                className="text-xs text-[#7A7068] hover:text-[#C09A52] transition-colors"
+              >
+                Or call {SITE.phones[0]}
               </a>
             </div>
-          </div>
+          </Reveal>
+        </div>
+      </div>
 
-          <div className="order-1 lg:order-2">
-            <div className="relative overflow-hidden rounded-3xl border border-border/60">
-              <div className="pointer-events-none absolute -inset-10 -z-10 bg-radial-glow opacity-50" />
-              <img src={s.image} alt={s.name} className="aspect-[4/5] h-full w-full object-cover" />
-            </div>
+      {/* Other services */}
+      <div className="bg-[#F0EAE0] py-20 md:py-28 px-6 md:px-12">
+        <div className="mx-auto max-w-7xl">
+          <SectionLabel>More from Amber</SectionLabel>
+          <h2
+            className="mt-5 font-serif font-light text-[#1A1916] mb-12"
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "clamp(1.8rem, 3.5vw, 3rem)",
+            }}
+          >
+            Other services you may need
+          </h2>
+          <RevealLine />
+          <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3 mt-0">
+            {others.map((o) => (
+              <Link
+                key={o.slug}
+                to="/services/$slug"
+                params={{ slug: o.slug }}
+                className="group block overflow-hidden"
+              >
+                <div className="aspect-[3/4] overflow-hidden">
+                  <img
+                    src={o.image}
+                    alt={o.name}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-1400 group-hover:scale-[1.05]"
+                  />
+                </div>
+                <div className="pt-4 pb-2">
+                  <p
+                    className="font-serif font-light text-[#1A1916] text-lg leading-tight group-hover:text-[#C09A52] transition-colors"
+                    style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                  >
+                    {o.name}
+                  </p>
+                  <p className="mt-1 text-[0.6rem] text-[#7A7068] uppercase tracking-[0.15em]">
+                    From {o.startingFrom}
+                  </p>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-4 py-24">
-        <h2 className="font-display text-3xl font-bold md:text-4xl">Other services you may need</h2>
-        <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {others.map((o) => (
-            <Link key={o.slug} to="/services/$slug" params={{ slug: o.slug }} className="group overflow-hidden rounded-2xl border border-border/60 bg-card transition-all hover:border-amber/40 hover:shadow-glow">
-              <div className="aspect-[4/3] overflow-hidden">
-                <img src={o.image} alt={o.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-110" />
-              </div>
-              <div className="p-5">
-                <div className="font-display text-lg font-semibold">{o.name}</div>
-                <div className="mt-1 text-xs text-muted-foreground">{o.short}</div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-    </>
+      </div>
+    </div>
   );
 }
